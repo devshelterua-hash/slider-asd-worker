@@ -32,7 +32,8 @@ def ensure() -> Path:
     WEIGHTS.parent.mkdir(parents=True, exist_ok=True)
     if not WEIGHTS.is_file():
         run([
-            "gdown", "--id", "1J-PDWDAkYCdT8T2Nxn3Q_-iOHH_t-9YP",
+            "gdown",
+            "https://drive.google.com/uc?id=1J-PDWDAkYCdT8T2Nxn3Q_-iOHH_t-9YP",
             "-O", str(WEIGHTS),
         ])
     if not S3FD.is_file():

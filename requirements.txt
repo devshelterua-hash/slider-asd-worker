@@ -8,5 +8,4 @@ opencv-python-headless
 python_speech_features
 gdown
 pandas
-supervision
 imageio[ffmpeg]
