@@ -1,0 +1,16 @@
+runpod>=1.7.0
+torch
+torchaudio
+torchvision
+numpy
+scipy
+scikit-learn
+tqdm
+scenedetect
+opencv-python-headless
+python_speech_features
+gdown
+pandas
+supervision
+imageio[ffmpeg]
+av==9.2.0
