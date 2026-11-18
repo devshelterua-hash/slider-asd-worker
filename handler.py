@@ -19,6 +19,9 @@ def _download(url: str, dest: str, timeout: int = 180) -> None:
 
 
 def process_job(job_input: dict[str, Any]) -> dict[str, Any]:
+    if job_input.get("ping") is True or str(job_input.get("ping", "")).lower() == "true":
+        return {"ok": True, "engine": "talknet", "ping": True}
+
     video_url = job_input.get("videoUrl") or job_input.get("video_url")
     video_b64 = job_input.get("videoBase64") or job_input.get("video_base64")
     max_seconds = float(job_input.get("maxSeconds") or os.environ.get("ASD_MAX_SECONDS") or 30)
