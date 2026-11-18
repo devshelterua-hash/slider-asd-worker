@@ -1,4 +1,7 @@
-runpod>=1.7.0
+# Keep runpod pinned + avoid fastapi[all] resolver hell on cold start.
+runpod==1.7.7
+aiohttp>=3.9.0
+requests>=2.31.0
 numpy
 scipy
 scikit-learn

@@ -26,8 +26,8 @@ else
   git -C "$APP_DIR" reset --hard origin/main
 fi
 
-echo "[bootstrap] pip install"
-pip install --no-cache-dir -r "$APP_DIR/requirements.txt"
+echo "[bootstrap] pip install (legacy resolver)"
+pip install --no-cache-dir --use-deprecated=legacy-resolver -r "$APP_DIR/requirements.txt"
 cd "$APP_DIR"
 echo "[bootstrap] ensure_talknet"
 python ensure_talknet.py
