@@ -28,6 +28,7 @@ fi
 
 echo "[bootstrap] pip install (legacy resolver)"
 pip install --no-cache-dir --use-deprecated=legacy-resolver -r "$APP_DIR/requirements.txt"
+pip install --no-cache-dir -U 'typing_extensions>=4.16.0' 
 cd "$APP_DIR"
 echo "[bootstrap] ensure_talknet"
 python ensure_talknet.py
