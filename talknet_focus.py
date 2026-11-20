@@ -73,6 +73,15 @@ def faces_to_track(faces: list[dict[str, Any]], frame_w: int, fps: float = 25.0)
 
     focusX = compact[len(compact) // 2]["focusX"] if compact else 0.5
     mean_score = sum(scores) / len(scores) if scores else 0.0
+    speaker_ids = set()
+    for row in faces:
+        for b in (row.get("faces") or []):
+            if b.get("speaking"):
+                sid = b.get("track_id", b.get("id"))
+                if sid is not None:
+                    speaker_ids.add(sid)
+                else:
+                    speaker_ids.add(id(b))
     return {
         "focusX": focusX,
         "hits": len(track),
@@ -80,7 +89,7 @@ def faces_to_track(faces: list[dict[str, Any]], frame_w: int, fps: float = 25.0)
         "track": compact,
         "asd": {
             "engine": "talknet",
-            "speakers": len({}),
+            "speakers": len(speaker_ids),
             "meanScore": round(mean_score, 3),
             "rawPoints": len(track),
         },
@@ -120,7 +129,20 @@ def run_talknet_focus(video_path: str, max_seconds: float = 30.0) -> dict[str, A
         return_visualization=False,
         in_memory_threshold=2500,
     )
-    result = faces_to_track(faces or [], frame_w=w, fps=25.0)
+    fps = max(1.0, (len(faces or []) / end) if end > 0 and faces else 25.0)
+    # Prefer container fps from ffprobe when available
+    try:
+        import json as _json
+        meta = _json.loads(subprocess.check_output([
+            "ffprobe", "-v", "error", "-select_streams", "v:0",
+            "-show_entries", "stream=r_frame_rate", "-of", "json", video_path,
+        ], text=True))
+        rate = ((meta.get("streams") or [{}])[0].get("r_frame_rate") or "25/1")
+        num, den = rate.split("/")
+        fps = float(num) / float(den or 1)
+    except Exception:
+        pass
+    result = faces_to_track(faces or [], frame_w=w, fps=fps)
     result["asd"]["frameW"] = w
     result["asd"]["frameH"] = h
     result["asd"]["durationSec"] = round(end, 2)
